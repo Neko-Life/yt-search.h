@@ -1,20 +1,20 @@
 # Specify compiler
-CC = g++
+CXX = g++
 
 # Specify compiler flag
 CCF = -std=c++17 -Wall -Wextra -g
 
 # Specify include folder
-INC = -Iinclude -I./
+INC = -Iinclude
 
 # Specify libs to use
 LIB = -lcurlpp -lcurl
 
 # Specify source file
-SRC = example.cpp # src/include/*.cpp
+SRC = src/example.cpp src/yt-search/*.cpp # src/include/*.cpp
 
 # Specify out file
-OUT = example
+OUT = example.out
 
 all: $(SRC)
-	$(CC) $(CCF) $(INC) $(LIB) $(SRC) -o $(OUT)
+	$(CXX) $(CCF) $(INC) $(LIB) $(SRC) -o $(OUT)

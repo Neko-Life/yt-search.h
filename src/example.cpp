@@ -6,14 +6,14 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 #include "nlohmann/json.hpp"
-#include "encode.h"
-#include "yt-search.h"
+#include "yt-search/encode.h"
+#include "yt-search/yt-search.h"
 
 int main(int argc, const char* argv[]) {
     std::string q;
     for (int a = 1; a < argc; a++)
     {
-        q += std::string(argv[a]);
+        q += " " + std::string(argv[a]);
     }
     YSearchResult data = yt_search(q);
     for (auto l : data.trackResults())
