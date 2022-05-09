@@ -122,8 +122,8 @@ YSearchResult yt_search(std::string search) {
     // MAGIC INIT
     std::string rawhttp = os.str();
 
-    const char var[21] = "var ytInitialData = ";
-    const char end[3] = "};";
+    static const char var[21] = "var ytInitialData = ";
+    static const char end[3] = "};";
 
     bool sw = false;
     size_t sI = -1;
@@ -158,7 +158,7 @@ YSearchResult yt_search(std::string search) {
     if ((int)sI < 0 || (int)eI < 0)
     {
         // If this getting printed to the console, the magic may be expired
-        printf("Not a valid youtube search query (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
+        fprintf(stderr, "Not a valid youtube search query (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
         return data;
     }
 
