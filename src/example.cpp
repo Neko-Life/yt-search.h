@@ -8,15 +8,17 @@
 #include "nlohmann/json.hpp"
 #include "yt-search/encode.h"
 #include "yt-search/yt-search.h"
+#include "yt-search/yt-track-info.h"
 
 int main(int argc, const char* argv[]) {
-    std::string q;
+    std::string q = "";
     for (int a = 1; a < argc; a++)
     {
-        q += " " + std::string(argv[a]);
+        q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);
     }
     YSearchResult data = yt_search(q);
-    for (auto l : data.trackResults())
+    std::vector<YTrack> res = data.trackResults();
+    for (auto l : res)
     {
         printf("TITLE: %s, %s\n", l.title().c_str(), l.url().c_str());
         printf("DESC: %s\n", l.snippetText().c_str());
@@ -34,5 +36,12 @@ int main(int argc, const char* argv[]) {
     printf("ESTIMATED_RESULT: %s\n", data.estimatedResults().c_str());
     printf("YET_ONLY_FOUND: %ld\n", data.count());
     printf("WHAT\n");
+
+    if (res.size())
+    {
+        auto r = res[0];
+        auto d = get_track_info(r.url());
+        printf("%s\n", d.raw.dump().c_str());
+    }
     return 0;
 }

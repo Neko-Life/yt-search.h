@@ -108,54 +108,36 @@ size_t YSearchResult::count() {
 }
 
 YSearchResult yt_search(std::string search) {
+    const std::string ec = encodeURIComponent(std::string(search));
     std::ostringstream os;
 
     curlpp::Cleanup curl_cleanup;
 
     curlpp::Easy req;
 
-    req.setOpt(curlpp::options::Url(std::string("https://www.youtube.com/results?search_query=") + encodeURIComponent(std::string(search))));
+    req.setOpt(curlpp::options::Url(std::string("https://www.youtube.com/results?search_query=") + ec));
     req.setOpt(curlpp::options::Header("User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0"));
     req.setOpt(curlpp::options::WriteStream(&os));
     req.perform();
 
     // MAGIC INIT
-    std::string rawhttp = os.str();
+    const std::string rawhttp = os.str();
 
-    static const char var[21] = "var ytInitialData = ";
-    static const char end[3] = "};";
+    static const std::string var = "var ytInitialData = ";
+    static const std::string end = "};";
 
-    bool sw = false;
-    size_t sI = -1;
-    size_t eI = -1;
-
-    // MAGIC EXECUTE
-    for (size_t i = 0; i < rawhttp.length(); i++)
-    {
-        if (sw == false)
-            for (size_t v = 0; v < sizeof(var) - 1; v++)
-            {
-                if (rawhttp[i + v] != var[v]) break;
-                if (v == sizeof(var) - 2)
-                {
-                    sI = i + sizeof(var) - 1;
-                    sw = true;
-                }
-            }
-        else for (size_t v = 0; v < sizeof(end) - 1; v++)
-        {
-            if (rawhttp[i + v] != end[v]) break;
-            if (v)
-            {
-                eI = i + sizeof(end) - 2;
-                break;
-            }
-        }
-        if ((int)eI > -1) break;
-    }
+    const size_t sI = rawhttp.find(var);
 
     YSearchResult data;
-    if ((int)sI < 0 || (int)eI < 0)
+    if (sI == std::string::npos)
+    {
+        // If this getting printed to the console, the magic may be expired
+        fprintf(stderr, "Not a valid youtube search query (or youtube update, yk they like to change stuffs)\nvar_start: %ld\n", sI);
+        return data;
+    }
+
+    const size_t eI = rawhttp.find(end, sI);
+    if (eI == std::string::npos)
     {
         // If this getting printed to the console, the magic may be expired
         fprintf(stderr, "Not a valid youtube search query (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
@@ -163,7 +145,8 @@ YSearchResult yt_search(std::string search) {
     }
 
     // MAGIC FINALIZE
-    std::string tJson = rawhttp.replace(rawhttp.begin() + eI, rawhttp.end(), "").replace(rawhttp.begin(), rawhttp.begin() + sI, "");
+    const size_t am = sI + var.length();
+    const std::string tJson = rawhttp.substr(am, eI - am + 1);
     data.raw = json::parse(tJson);
     return data;
 }

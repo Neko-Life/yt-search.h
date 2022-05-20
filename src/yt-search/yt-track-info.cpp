@@ -7,14 +7,36 @@
 
 using json = nlohmann::json;
 
-bool YTInfo::empty() {
-    return raw.is_null();
-};
+// "audio/webm; codecs=\"opus\""
+// "video/mp4; codecs=\"avc1.4d401f\""
+
+Mime_Type::Mime_Type() : str("") {}
+
+Mime_Type::Mime_Type(std::string str) {
+    if (!str.length())
+    {
+        this->str = "";
+        return;
+    }
+    this->str = str;
+    size_t l_type_index = str.find('/');
+    if (l_type_index)
+    {
+        this->format = str.substr(0, l_type_index);
+        size_t l_format_index = str.find(';');
+        if (l_format_index) this->format = str.substr(l_type_index + 1, l_format_index - (l_type_index + 1));
+    }
+    size_t l_codecs_index = str.find('"');
+    if (l_codecs_index) this->codecs = str.substr(l_codecs_index, str.length() - l_codecs_index);
+}
+
+Mime_Type::~Mime_Type() = default;
 
 YTInfo get_track_info(std::string url) {
+    std::ostringstream os;
+
     curlpp::Cleanup curl_cleanup;
 
-    std::ostringstream os;
     curlpp::Easy req;
 
     req.setOpt(curlpp::options::Url(url));
@@ -22,47 +44,33 @@ YTInfo get_track_info(std::string url) {
     req.setOpt(curlpp::options::WriteStream(&os));
     req.perform();
 
-    std::string rawhttp = os.str();
+    // MAGIC INIT
+    const std::string rawhttp = os.str();
 
-    static const char var[31] = "var ytInitialPlayerResponse = ";
-    static const char end[3] = "};";
+    static const std::string var = "var ytInitialPlayerResponse = ";
+    static const std::string end = "};";
 
-    bool sw = false;
-    size_t sI = -1;
-    size_t eI = -1;
-
-    for (size_t i = 0; i < rawhttp.length(); i++)
-    {
-        if (sw == false)
-            for (size_t v = 0; v < sizeof(var) - 1; v++)
-            {
-                if (rawhttp[i + v] != var[v]) break;
-                if (v == sizeof(var) - 2)
-                {
-                    sI = i + sizeof(var) - 1;
-                    sw = true;
-                }
-            }
-        else for (size_t v = 0; v < sizeof(end) - 1; v++)
-        {
-            if (rawhttp[i + v] != end[v]) break;
-            if (v)
-            {
-                eI = i + sizeof(end) - 2;
-                break;
-            }
-        }
-        if ((int)eI > -1) break;
-    }
+    const size_t sI = rawhttp.find(var);
 
     YTInfo data;
-    if ((int)sI < 0 || (int)eI < 0)
+    if (sI == std::string::npos)
     {
-        fprintf(stderr, "Not a valid youtube watch url (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
+        // If this getting printed to the console, the magic may be expired
+        fprintf(stderr, "Not a valid youtube page (or youtube update, yk they like to change stuffs)\nvar_start: %ld\n", sI);
         return data;
     }
 
-    std::string tJson = rawhttp.replace(rawhttp.begin() + eI, rawhttp.end(), "").replace(rawhttp.begin(), rawhttp.begin() + sI, "");
+    const size_t eI = rawhttp.find(end, sI);
+    if (eI == std::string::npos)
+    {
+        // If this getting printed to the console, the magic may be expired
+        fprintf(stderr, "Not a valid youtube page (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
+        return data;
+    }
+
+    // MAGIC FINALIZE
+    const size_t am = sI + var.length();
+    const std::string tJson = rawhttp.substr(am, eI - am + 1);
     data.raw = json::parse(tJson);
     return data;
 }
