@@ -10,13 +10,15 @@
 #include "yt-search/yt-search.h"
 #include "yt-search/yt-track-info.h"
 
+using namespace yt_search;
+
 int main(int argc, const char* argv[]) {
     std::string q = "";
     for (int a = 1; a < argc; a++)
     {
         q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);
     }
-    YSearchResult data = yt_search(q);
+    YSearchResult data = search(q);
     std::vector<YTrack> res = data.trackResults();
     for (auto l : res)
     {
@@ -41,7 +43,27 @@ int main(int argc, const char* argv[]) {
     {
         auto r = res[0];
         auto d = get_track_info(r.url());
-        printf("%s\n", d.raw.dump().c_str());
+        auto p = d.audio_info(251);
+        printf("\nitag: %d\n", p.itag());
+        printf("audio_quality: %s\n", p.audio_quality().c_str());
+        printf("average_bitrate: %ld\n", p.average_bitrate());
+        printf("bitrate: %ld\n", p.bitrate());
+        printf("channels: %d\n", p.channel());
+        printf("duration: %ld\n", p.duration());
+        printf("index_range: %ld, %ld\n", p.index_range().first, p.index_range().second);
+        printf("init_range: %ld, %ld\n", p.init_range().first, p.init_range().second);
+        printf("last_modified: %ld\n", p.last_modified());
+        printf("length: %ld\n", p.length());
+        printf("loudness: %lf\n", p.loudness());
+        auto mt = p.mime_type();
+        printf("mime_str: %s\n", mt.str.c_str());
+        printf("mime_fmt: %s\n", mt.format.c_str());
+        printf("mime_codecs: %s\n", mt.codecs.c_str());
+        printf("mime_type: %s\n", mt.type.c_str());
+        printf("projection: %s\n", p.projection_type().c_str());
+        printf("quality: %s\n", p.quality().c_str());
+        printf("sample_rate: %ld\n", p.sample_rate());
+        printf("url: %s\n", p.url().c_str());
     }
     return 0;
 }

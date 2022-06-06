@@ -54,62 +54,73 @@
         //   "averageBitrate": 484161,
         //   "approxDurationMs": "230129"
         // }
+namespace yt_search {
+    struct mime_type_t {
+        std::string str;
+        std::string type;
+        std::string format;
+        std::string codecs;
 
-struct Mime_Type {
-    std::string str;
-    std::string type;
-    std::string format;
-    std::string codecs;
+        mime_type_t();
+        mime_type_t(std::string str);
+        ~mime_type_t();
+    };
 
-    Mime_Type();
-    Mime_Type(std::string str);
-    ~Mime_Type();
-};
+    struct audio_info_t {
+        nlohmann::json raw;
 
-struct Audio_Info {
-    nlohmann::json raw;
+        // Format code
+        int itag();
 
-    // Format code
-    int itag();
+        // Stream url
+        std::string url();
 
-    // Stream url
-    std::string url();
+        // Metadata
+        mime_type_t mime_type();
+        size_t bitrate();
 
-    // Metadata
-    Mime_Type mime_type();
-    uint64_t bitrate();
+        // start, end
+        std::pair<size_t, size_t> init_range();
 
-    // start, end
-    std::pair<size_t, size_t> init_range();
+        // start,end
+        std::pair<size_t, size_t> index_range();
+        time_t last_modified();
 
-    // start,end
-    std::pair<size_t, size_t> index_range();
-    time_t last_modified();
+        // Content length
+        size_t length();
+        std::string quality();
+        std::string projection_type();
+        size_t average_bitrate();
+        std::string audio_quality();
 
-    // Content length
-    size_t length();
-    std::string quality();
-    std::string projection_type();
-    uint64_t average_bitrate();
-    std::string audio_quality();
+        // Duration in ms
+        uint64_t duration();
 
-    // Duration in ms
-    uint64_t duration();
+        // Audio sampling rate
+        uint64_t sample_rate();
 
-    // Audio sampling rate
-    uint64_t sample_rate();
+        // Audio channel
+        uint8_t channel();
 
-    // Audio channel
-    uint8_t channel();
+        // Loudness in decible
+        double loudness();
+    };
 
-    // Loudness in decible
-    double loudness();
-};
+    struct YTInfo {
+        nlohmann::json raw;
 
-struct YTInfo {
-    nlohmann::json raw;
-};
+        /**
+         * @brief Get audio info
+         *
+         * @param format Audio format
+         * @return audio_info_t
+         */
+        audio_info_t audio_info(int format);
 
-YTInfo get_track_info(std::string url);
+        // video()
+    };
+
+    YTInfo get_track_info(std::string url);
+}
 
 #endif

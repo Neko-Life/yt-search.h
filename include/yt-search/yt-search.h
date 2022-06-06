@@ -5,49 +5,51 @@
 
 #include "nlohmann/json.hpp"
 
-struct YChannel {
-    std::string name;
-    std::string url;
-};
+namespace yt_search {
+    struct YChannel {
+        std::string name;
+        std::string url;
+    };
 
-struct YThumbnail {
-    int height;
-    std::string url;
-    int width;
-};
+    struct YThumbnail {
+        int height;
+        std::string url;
+        int width;
+    };
 
-struct YTrack {
-    nlohmann::json raw;
+    struct YTrack {
+        nlohmann::json raw;
 
-    std::string snippetText();
-    std::string id();
-    std::string url();
-    std::string trackingParams();
-    std::vector<YThumbnail> thumbnails();
-    YThumbnail bestThumbnail();
+        std::string snippetText();
+        std::string id();
+        std::string url();
+        std::string trackingParams();
+        std::vector<YThumbnail> thumbnails();
+        YThumbnail bestThumbnail();
 
-    // Track length
-    // TODO: Parse to ms
-    std::string length();
-    YChannel channel();
-    std::string title();
-};
+        // Track length
+        // TODO: Parse to ms
+        std::string length();
+        YChannel channel();
+        std::string title();
+    };
 
-struct YSearchResult {
-    nlohmann::json raw;
+    struct YSearchResult {
+        nlohmann::json raw;
 
-    // This is interesting
-    std::string estimatedResults();
-    std::vector<YTrack> trackResults();
-    size_t count();
-};
+        // This is interesting
+        std::string estimatedResults();
+        std::vector<YTrack> trackResults();
+        size_t count();
+    };
 
-/**
- * @brief Search and return track results
- *
- * @param search Query
- * @return YSearchResult
- */
-YSearchResult yt_search(std::string search);
+    /**
+     * @brief Search and return track results
+     *
+     * @param search Query
+     * @return YSearchResult
+     */
+    YSearchResult search(std::string search);
+}
 
 #endif
