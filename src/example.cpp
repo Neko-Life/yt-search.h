@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <vector>
 #include <string>
 #include <regex>
 #include <fstream>
@@ -36,7 +37,7 @@ int main(int argc, const char* argv[]) {
         printf("T_PARAM: %s\n", l.trackingParams().c_str());
     }
     printf("ESTIMATED_RESULT: %s\n", data.estimatedResults().c_str());
-    printf("YET_ONLY_FOUND: %ld\n", data.count());
+    printf("YET_ONLY_FOUND: %ld\n", res.size());
     printf("WHAT\n");
 
     if (res.size())

@@ -1,7 +1,8 @@
+#include <ostream>
+#include <string>
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
-#include <ostream>
 #include "nlohmann/json.hpp"
 #include "yt-search/yt-track-info.h"
 

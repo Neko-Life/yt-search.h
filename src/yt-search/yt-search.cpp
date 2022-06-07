@@ -1,5 +1,7 @@
 /* Very simple YouTube track searching function. Made with love by Neko Life :heart: */
 
+#include <string>
+#include <vector>
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
@@ -102,10 +104,6 @@ namespace yt_search {
             });
         }
         return res;
-    }
-
-    size_t YSearchResult::count() {
-        return trackResults().size();
     }
 
     YSearchResult search(std::string search) {

@@ -3,6 +3,8 @@
 #ifndef YT_SEARCH_H
 #define YT_SEARCH_H
 
+#include <vector>
+#include <string>
 #include "nlohmann/json.hpp"
 
 namespace yt_search {
@@ -40,7 +42,6 @@ namespace yt_search {
         // This is interesting
         std::string estimatedResults();
         std::vector<YTrack> trackResults();
-        size_t count();
     };
 
     /**

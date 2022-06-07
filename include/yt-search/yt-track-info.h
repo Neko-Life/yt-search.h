@@ -106,6 +106,8 @@ namespace yt_search {
         double loudness();
     };
 
+    // struct video_info_t {};
+
     struct YTInfo {
         nlohmann::json raw;
 
@@ -117,7 +119,7 @@ namespace yt_search {
          */
         audio_info_t audio_info(int format);
 
-        // video()
+        // video_info_t video_info(int format);
     };
 
     YTInfo get_track_info(std::string url);
