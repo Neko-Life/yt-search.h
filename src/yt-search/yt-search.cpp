@@ -2,9 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
 #include "nlohmann/json.hpp"
 #include "yt-search/encode.h"
 #include "yt-search/yt-search.h"
@@ -52,7 +49,7 @@ namespace yt_search {
                 data["height"].get<int>(),
                 data["url"].get<std::string>(),
                 data["width"].get<int>()
-            });
+                });
         }
         return res;
     }
@@ -70,7 +67,7 @@ namespace yt_search {
     }
 
     YChannel YTrack::channel() {
-        json d = raw["ownerText"]["runs"][0];
+        json d = raw["longBylineText"]["runs"][0];
         if (d.is_null()) return {};
         json m = d["navigationEndpoint"]["commandMetadata"]["webCommandMetadata"]["url"];
         return {
@@ -81,7 +78,7 @@ namespace yt_search {
 
     std::string YTrack::title() {
         json d = raw["title"]["runs"][0]["text"];
-        if (d.is_null()) return "";
+        if (d.is_null()) if ((d = raw["title"]["simpleText"]).is_null()) return "";
         return d.get<std::string>();
     }
 
@@ -101,52 +98,14 @@ namespace yt_search {
             if (data.is_null()) continue;
             res.push_back({
                 data
-            });
+                });
         }
         return res;
     }
 
     YSearchResult search(std::string search) {
-        const std::string ec = encodeURIComponent(std::string(search));
-        std::ostringstream os;
-
-        curlpp::Cleanup curl_cleanup;
-
-        curlpp::Easy req;
-
-        req.setOpt(curlpp::options::Url(std::string("https://www.youtube.com/results?search_query=") + ec));
-        req.setOpt(curlpp::options::Header("User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0"));
-        req.setOpt(curlpp::options::WriteStream(&os));
-        req.perform();
-
-        // MAGIC INIT
-        const std::string rawhttp = os.str();
-
-        static const std::string var = "var ytInitialData = ";
-        static const std::string end = "};";
-
-        const size_t sI = rawhttp.find(var);
-
-        YSearchResult data;
-        if (sI == std::string::npos)
-        {
-            // If this getting printed to the console, the magic may be expired
-            fprintf(stderr, "Not a valid youtube search query (or youtube update, yk they like to change stuffs)\nvar_start: %ld\n", sI);
-            return data;
-        }
-
-        const size_t eI = rawhttp.find(end, sI);
-        if (eI == std::string::npos)
-        {
-            // If this getting printed to the console, the magic may be expired
-            fprintf(stderr, "Not a valid youtube search query (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
-            return data;
-        }
-
-        // MAGIC FINALIZE
-        const size_t am = sI + var.length();
-        const std::string tJson = rawhttp.substr(am, eI - am + 1);
-        data.raw = json::parse(tJson);
-        return data;
+        YSearchResult ret;
+        get_data(std::string("https://www.youtube.com/results?search_query=") + encodeURIComponent(search), &ret);
+        return ret;
     }
 }

@@ -1,9 +1,7 @@
 #include <ostream>
 #include <string>
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
 #include "nlohmann/json.hpp"
+#include "yt-search/yt-search.h"
 #include "yt-search/yt-track-info.h"
 
 namespace yt_search {
@@ -174,45 +172,8 @@ namespace yt_search {
     }
 
     YTInfo get_track_info(std::string url) {
-        std::ostringstream os;
-
-        curlpp::Cleanup curl_cleanup;
-
-        curlpp::Easy req;
-
-        req.setOpt(curlpp::options::Url(url));
-        req.setOpt(curlpp::options::Header("User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0"));
-        req.setOpt(curlpp::options::WriteStream(&os));
-        req.perform();
-
-        // MAGIC INIT
-        const std::string rawhttp = os.str();
-
-        static const std::string var = "var ytInitialPlayerResponse = ";
-        static const std::string end = "};";
-
-        const size_t sI = rawhttp.find(var);
-
-        YTInfo data;
-        if (sI == std::string::npos)
-        {
-            // If this getting printed to the console, the magic may be expired
-            fprintf(stderr, "Not a valid youtube page (or youtube update, yk they like to change stuffs)\nvar_start: %ld\n", sI);
-            return data;
-        }
-
-        const size_t eI = rawhttp.find(end, sI);
-        if (eI == std::string::npos)
-        {
-            // If this getting printed to the console, the magic may be expired
-            fprintf(stderr, "Not a valid youtube page (or youtube update, yk they like to change stuffs)\nvar_start: %ld\nvar_end: %ld\n", sI, eI);
-            return data;
-        }
-
-        // MAGIC FINALIZE
-        const size_t am = sI + var.length();
-        const std::string tJson = rawhttp.substr(am, eI - am + 1);
-        data.raw = json::parse(tJson);
-        return data;
+        YTInfo ret;
+        get_data(url, &ret, "var ytInitialPlayerResponse = ");
+        return ret;
     }
 }

@@ -10,6 +10,7 @@
 #include "yt-search/encode.h"
 #include "yt-search/yt-search.h"
 #include "yt-search/yt-track-info.h"
+#include "yt-search/yt-playlist.h"
 
 using namespace yt_search;
 
@@ -21,6 +22,8 @@ int main(int argc, const char* argv[]) {
     }
     YSearchResult data = search(q);
     std::vector<YTrack> res = data.trackResults();
+    // YPlaylist data = get_playlist(q);
+    // std::vector<YTrack> res = data.entries();
     for (auto l : res)
     {
         printf("TITLE: %s, %s\n", l.title().c_str(), l.url().c_str());
