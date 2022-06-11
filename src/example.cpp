@@ -20,10 +20,10 @@ int main(int argc, const char* argv[]) {
     {
         q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);
     }
-    YSearchResult data = search(q);
-    std::vector<YTrack> res = data.trackResults();
-    // YPlaylist data = get_playlist(q);
-    // std::vector<YTrack> res = data.entries();
+    // YSearchResult data = search(q);
+    // std::vector<YTrack> res = data.trackResults();
+    YPlaylist data = get_playlist(q);
+    std::vector<YTrack> res = data.entries();
     for (auto l : res)
     {
         printf("TITLE: %s, %s\n", l.title().c_str(), l.url().c_str());
@@ -39,7 +39,7 @@ int main(int argc, const char* argv[]) {
         printf("BEST_T: %d, %d, %s\n", b.height, b.width, b.url.c_str());
         printf("T_PARAM: %s\n", l.trackingParams().c_str());
     }
-    printf("ESTIMATED_RESULT: %s\n", data.estimatedResults().c_str());
+    // printf("ESTIMATED_RESULT: %s\n", data.estimatedResults().c_str());
     printf("YET_ONLY_FOUND: %ld\n", res.size());
     printf("WHAT\n");
 

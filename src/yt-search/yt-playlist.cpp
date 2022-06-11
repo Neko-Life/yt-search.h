@@ -26,7 +26,6 @@ namespace yt_search {
                 printf("data[%ld].is_null\n", i);
                 continue;
             }
-            printf("added data: %ld\n", i);
             res.push_back({
                 data
                 });
