@@ -3,3 +3,5 @@ libs/
 include/nlohmann/
 .vscode/
 example.out
+*.o
+*.d

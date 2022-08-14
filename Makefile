@@ -2,7 +2,7 @@
 CXX = g++
 
 # Specify compiler flag
-CCF = -std=c++17 -Wall -Wextra -g
+CCF = -std=c++17 -MMD -Wall -Wextra -g
 
 # Specify include folder
 INC = -Iinclude
@@ -11,10 +11,17 @@ INC = -Iinclude
 LIB = -lcurlpp -lcurl
 
 # Specify source file
-SRC = src/example.cpp src/yt-search/*.cpp # src/include/*.cpp
+SRC = src/example.cpp $(wildcard src/yt-search/*.cpp) # src/include/*.cpp
+
+OBJS = $(SRC:.cpp=.o)
+DSFILES = $(SRC:.cpp=.d)
+include $(DSFILES)
 
 # Specify out file
 OUT = example.out
 
-all: $(SRC)
-	$(CXX) $(CCF) $(INC) $(LIB) $(SRC) -o $(OUT)
+all: $(OBJS)
+	$(CXX) $(CCF) $(INC) $(LIB) $(OBJS) -o $(OUT)
+
+$(DSFILES): $(SRC)
+	$(CXX) $(CCF) $(INC) $(LIB) -c $(@:.d=.cpp) -o $(@:.d=.o)

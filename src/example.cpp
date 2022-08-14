@@ -20,10 +20,10 @@ int main(int argc, const char* argv[]) {
     {
         q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);
     }
-    // YSearchResult data = search(q);
-    // std::vector<YTrack> res = data.trackResults();
-    YPlaylist data = get_playlist(q);
-    std::vector<YTrack> res = data.entries();
+    YSearchResult data = search(q);
+    std::vector<YTrack> res = data.trackResults();
+    // YPlaylist data = get_playlist(q);
+    // std::vector<YTrack> res = data.entries();
     for (auto l : res)
     {
         printf("TITLE: %s, %s\n", l.title().c_str(), l.url().c_str());
