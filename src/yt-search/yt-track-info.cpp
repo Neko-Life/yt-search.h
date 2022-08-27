@@ -1,4 +1,3 @@
-#include <ostream>
 #include <string>
 #include "nlohmann/json.hpp"
 #include "yt-search/yt-search.h"
@@ -32,136 +31,130 @@ namespace yt_search {
 
     mime_type_t::~mime_type_t() = default;
 
-    int audio_info_t::itag() {
-        return raw["itag"].get<int>();
+    int audio_info_t::itag() const {
+        return raw.is_null() ? 0 : raw.value<int>("itag", 0);
     }
 
-    std::string audio_info_t::url() {
-        if (raw["url"].is_null()) return "";
-        return raw["url"].get<std::string>();
+    std::string audio_info_t::url() const {
+        return raw.is_null() ? "" : raw.value<std::string>("url", "");
     }
 
-    mime_type_t audio_info_t::mime_type() {
-        std::string con = "";
-        if (!raw["mimeType"].is_null()) con = raw["mimeType"].get<std::string>();
-        return mime_type_t(con);
+    mime_type_t audio_info_t::mime_type() const {
+        return mime_type_t(raw.is_null() ? "" : raw.value<std::string>("mimeType", ""));
     }
 
-    size_t audio_info_t::bitrate() {
-        if (raw["bitrate"].is_null()) return 0;
-        return raw["bitrate"].get<size_t>();
+    size_t audio_info_t::bitrate() const {
+        return raw.is_null() ? 0 : raw.value<size_t>("bitrate", 0);
     }
 
     std::pair<size_t, size_t> get_ranges(const json& raw, const std::string& key) {
-        if (raw[key].is_null()) return { 0,0 };
-        json re1 = raw[key]["start"];
-        json re2 = raw[key]["end"];
+        if (raw.is_null()) return { 0,0 };
+
+        json j = raw;
+
+        if (!transverse(j, { key.c_str() })) return { 0,0 };
+
+        json re1 = j;//"start"
+        json re2 = j;//"end"
         size_t r1 = 0;
         size_t r2 = 0;
-        if (!re1.is_null())
+
+        if (transverse(re1, { "start" }))
         {
-            std::istringstream op(re1.get<std::string>());
-            op >> r1;
+		r1 = strtoul(re1.get<std::string>().c_str(), NULL, 10);
         }
-        if (!re2.is_null())
+        if (transverse(re2, { "end" }))
         {
-            std::istringstream op(re2.get<std::string>());
-            op >> r2;
+		r2 = strtoul(re2.get<std::string>().c_str(), NULL, 10);
         }
+
         return { r1,r2 };
     }
 
-    std::pair<size_t, size_t> audio_info_t::init_range() {
+    std::pair<size_t, size_t> audio_info_t::init_range() const {
         return get_ranges(raw, "initRange");
     }
 
-    std::pair<size_t, size_t> audio_info_t::index_range() {
+    std::pair<size_t, size_t> audio_info_t::index_range() const {
         return get_ranges(raw, "indexRange");
     }
 
-    time_t audio_info_t::last_modified() {
+    time_t audio_info_t::last_modified() const {
         time_t ret = 0;
-        if (!raw["lastModified"].is_null())
+        if (!raw.is_null())
         {
-            std::istringstream s(raw["lastModified"].get<std::string>());
-            s >> ret;
+		ret = (time_t)strtol(raw.value<std::string>("lastModified", "").c_str(), NULL, 10);
         }
         return ret;
     }
 
-    size_t audio_info_t::length() {
+    size_t audio_info_t::length() const {
         size_t ret = 0;
-        if (!raw["contentLength"].is_null())
+        if (!raw.is_null())
         {
-            std::istringstream s(raw["contentLength"].get<std::string>());
-            s >> ret;
+            ret = strtoul(raw.value<std::string>("contentLength", "").c_str(), NULL, 10);
         }
         return ret;
     }
 
-    std::string audio_info_t::quality() {
-        if (raw["quality"].is_null()) return "";
-        return raw["quality"].get<std::string>();
+    std::string audio_info_t::quality() const {
+        return raw.is_null() ? "" : raw.value<std::string>("quality", "");
     }
 
-    std::string audio_info_t::projection_type() {
-        if (raw["projectionType"].is_null()) return "";
-        return raw["projectionType"].get<std::string>();
+    std::string audio_info_t::projection_type() const {
+        return raw.is_null() ? "" : raw.value<std::string>("projectionType", "");
     }
 
-    size_t audio_info_t::average_bitrate() {
-        if (raw["averageBitrate"].is_null()) return 0;
-        return raw["averageBitrate"].get<size_t>();
+    size_t audio_info_t::average_bitrate() const {
+        return raw.is_null() ? 0 : raw.value<uint64_t>("averageBitrate", 0);
     }
 
-    std::string audio_info_t::audio_quality() {
-        if (raw["audioQuality"].is_null()) return "";
-        return raw["audioQuality"].get<std::string>();
+    std::string audio_info_t::audio_quality() const {
+        return raw.is_null() ? "" : raw.value<std::string>("audioQuality", "");
     }
 
-    uint64_t audio_info_t::duration() {
+    uint64_t audio_info_t::duration() const {
         uint64_t ret = 0;
-        if (!raw["approxDurationMs"].is_null())
+        if (!raw.is_null())
         {
-            std::istringstream s(raw["approxDurationMs"].get<std::string>());
-            s >> ret;
+            ret = strtoul(raw.value<std::string>("approxDurationMs", "").c_str(), NULL, 10);
         }
         return ret;
     }
 
-    uint64_t audio_info_t::sample_rate() {
+    uint64_t audio_info_t::sample_rate() const {
         uint64_t ret = 0;
-        if (!raw["audioSampleRate"].is_null())
+        if (!raw.is_null())
         {
-            std::istringstream s(raw["audioSampleRate"].get<std::string>());
-            s >> ret;
+            ret = strtoul(raw.value<std::string>("audioSampleRate", "").c_str(), NULL, 0);
         }
         return ret;
     }
 
-    uint8_t audio_info_t::channel() {
-        if (raw["audioChannels"].is_null()) return 0;
-        return raw["audioChannels"].get<int>();
+    uint8_t audio_info_t::channel() const {
+        return raw.is_null() ? 0 : raw.value<uint64_t>("audioChannels", 0);
     }
 
-    double audio_info_t::loudness() {
-        if (raw["loudnessDb"].is_null()) return 0;
-        return raw["loudnessDb"].get<double>();
+    double audio_info_t::loudness() const {
+        return raw.is_null() ? 0.0D : raw.value<double>("loudnessDb", 0.0D);
     }
 
-    audio_info_t YTInfo::audio_info(int format) {
+    audio_info_t YTInfo::audio_info(int format) const {
         audio_info_t ret;
-        auto l = raw["streamingData"]["adaptiveFormats"];
-        if (l.is_null())
+        json l = raw;
+	
+        if (!transverse(l, { "streamingData", "adaptiveFormats" }))
         {
-            printf("PATH IS NULL\n");
             return ret;
         }
-        for (size_t j = 0; j < l.size(); j++)
+        
+	if (l.is_array()) for (size_t j = 0; j < l.size(); j++)
         {
-            json i = l[j];
-            if (i["itag"].is_null()) continue;
-            int a = i["itag"].get<int>();
+            json i = l.at(j);
+	    if (i.is_null()) continue;
+            
+	    int a = i.value<int64_t>("itag", -1);
+
             if (a == format)
             {
                 ret.raw = i;

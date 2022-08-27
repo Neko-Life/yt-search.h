@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) {
     {
         q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);
     }
-    YSearchResult data = search(q);
+    const YSearchResult data = search(q);
     std::vector<YTrack> res = data.trackResults();
     // YPlaylist data = get_playlist(q);
     // std::vector<YTrack> res = data.entries();

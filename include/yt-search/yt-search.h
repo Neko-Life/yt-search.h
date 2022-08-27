@@ -25,26 +25,26 @@ namespace yt_search {
     struct YTrack {
         nlohmann::json raw;
 
-        std::string snippetText();
-        std::string id();
-        std::string url();
-        std::string trackingParams();
-        std::vector<YThumbnail> thumbnails();
-        YThumbnail bestThumbnail();
+        std::string snippetText() const;
+        std::string id() const;
+        std::string url() const;
+        std::string trackingParams() const;
+        std::vector<YThumbnail> thumbnails() const;
+        YThumbnail bestThumbnail() const;
 
         // Track length
         // TODO: Parse to ms
-        std::string length();
-        YChannel channel();
-        std::string title();
+        std::string length() const;
+        YChannel channel() const;
+        std::string title() const;
     };
 
     struct YSearchResult {
         nlohmann::json raw;
 
         // This is interesting
-        std::string estimatedResults();
-        std::vector<YTrack> trackResults();
+        std::string estimatedResults() const;
+        std::vector<YTrack> trackResults() const;
     };
 
     /**
@@ -113,6 +113,8 @@ namespace yt_search {
      * @return YSearchResult
      */
     YSearchResult search(std::string search);
+
+    bool transverse(nlohmann::json& j, const std::initializer_list<const char*> path);
 }
 
 #endif

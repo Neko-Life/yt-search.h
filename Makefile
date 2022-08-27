@@ -25,3 +25,6 @@ all: $(OBJS)
 
 $(DSFILES): $(SRC)
 	$(CXX) $(CCF) $(INC) $(LIB) -c $(@:.d=.cpp) -o $(@:.d=.o)
+
+clean:
+	rm $(OBJS) $(DSFILES) $(OUT)

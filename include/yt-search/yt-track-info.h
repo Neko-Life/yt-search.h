@@ -70,40 +70,40 @@ namespace yt_search {
         nlohmann::json raw;
 
         // Format code
-        int itag();
+        int itag() const;
 
         // Stream url
-        std::string url();
+        std::string url() const;
 
         // Metadata
-        mime_type_t mime_type();
-        size_t bitrate();
+        mime_type_t mime_type() const;
+        size_t bitrate() const;
 
         // start, end
-        std::pair<size_t, size_t> init_range();
+        std::pair<size_t, size_t> init_range() const;
 
         // start,end
-        std::pair<size_t, size_t> index_range();
-        time_t last_modified();
+        std::pair<size_t, size_t> index_range() const;
+        time_t last_modified() const;
 
         // Content length
-        size_t length();
-        std::string quality();
-        std::string projection_type();
-        size_t average_bitrate();
-        std::string audio_quality();
+        size_t length() const;
+        std::string quality() const;
+        std::string projection_type() const;
+        size_t average_bitrate() const;
+        std::string audio_quality() const;
 
         // Duration in ms
-        uint64_t duration();
+        uint64_t duration() const;
 
         // Audio sampling rate
-        uint64_t sample_rate();
+        uint64_t sample_rate() const;
 
         // Audio channel
-        uint8_t channel();
+        uint8_t channel() const;
 
         // Loudness in decible
-        double loudness();
+        double loudness() const;
     };
 
     // struct video_info_t {};
@@ -117,7 +117,7 @@ namespace yt_search {
          * @param format Audio format
          * @return audio_info_t
          */
-        audio_info_t audio_info(int format);
+        audio_info_t audio_info(int format) const;
 
         // video_info_t video_info(int format);
     };
