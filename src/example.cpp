@@ -36,6 +36,8 @@ int main(int argc, const char* argv[]) {
             printf("THUMBS: %d, %d, %s\n", t.height, t.width, t.url.c_str());
         }
         auto b = l.bestThumbnail();
+        l.bestThumbnail();
+        l.bestThumbnail();
         printf("BEST_T: %d, %d, %s\n", b.height, b.width, b.url.c_str());
         printf("T_PARAM: %s\n", l.trackingParams().c_str());
     }
