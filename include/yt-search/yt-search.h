@@ -63,8 +63,6 @@ namespace yt_search {
 			using json = nlohmann::json;
 			std::ostringstream os;
 
-			curlpp::Cleanup curl_cleanup;
-
 			curlpp::Easy req;
 
 			req.setOpt(curlpp::options::Url(url));

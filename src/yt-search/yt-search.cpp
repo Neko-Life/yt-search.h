@@ -34,7 +34,6 @@ namespace yt_search {
 
 	long status_code(const std::string& url) {
 		std::ostringstream stream;
-		curlpp::Cleanup curl_cleanup;
 
 		curlpp::Easy req;
 
