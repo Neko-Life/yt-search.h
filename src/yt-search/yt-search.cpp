@@ -196,6 +196,28 @@ std::vector<YTrack> YSearchResult::trackResults() const {
     return res;
 }
 
+/* !TODO: to be implemented
+std::vector<YTrack> YSearchResult::sideTrackPlaylist() const {
+    std::vector<YTrack> res;
+    json d = raw;
+
+    transverse(d, {"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents", "0", "itemSectionRenderer", "contents"});
+
+    if (!d.size() || (d.is_array() && d.at(0).is_null()))
+        return res;
+
+    for (size_t i = 0; i < d.size(); i++) {
+        json data = d;
+
+        if (!transverse(data, {std::to_string(i).c_str(), "videoRenderer"}))
+            continue;
+
+        res.push_back({data});
+    }
+
+    return res;
+}*/
+
 YSearchResult search(std::string search) {
     YSearchResult ret;
     get_data(std::string("https://www.youtube.com/results?search_query=") + encodeURIComponent(search), &ret);
