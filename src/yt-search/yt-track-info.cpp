@@ -1,7 +1,5 @@
 #include "yt-search/yt-track-info.h"
 #include "nlohmann/json.hpp"
-#include "yt-search/yt-search.h"
-#include <string>
 
 namespace yt_search {
 using json = nlohmann::json;

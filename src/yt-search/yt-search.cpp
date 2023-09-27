@@ -2,12 +2,10 @@
 
 #include "yt-search/yt-search.h"
 #include "nlohmann/json.hpp"
-#include "yt-search/encode.h"
 #include <curlpp/Infos.hpp>
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
 #include <vector>
 
 namespace yt_search {

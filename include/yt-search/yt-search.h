@@ -4,6 +4,7 @@
 #define YT_SEARCH_H
 
 #include "nlohmann/json.hpp"
+#include "yt-search/encode.h"
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 #include <curlpp/cURLpp.hpp>

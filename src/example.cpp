@@ -15,6 +15,12 @@
 using namespace yt_search;
 
 int main(int argc, const char *argv[]) {
+    if (argc < 2)
+    {
+        fprintf(stderr, "Provide a search query\n");
+        return 1;
+    }
+
     std::string q = "";
     for (int a = 1; a < argc; a++) {
         q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);

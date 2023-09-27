@@ -2,6 +2,7 @@
 #define YT_TRACK_INFO_H
 
 #include "nlohmann/json.hpp"
+#include "yt-search/yt-search.h"
 #include <string>
 
 // {

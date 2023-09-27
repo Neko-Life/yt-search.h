@@ -1,8 +1,0 @@
--std=c++17
--MMD
--Wall
--Wextra
--g
--Iinclude
--lcurlpp
--lcurl
