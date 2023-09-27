@@ -5,7 +5,7 @@ CXX = g++
 CCF = -std=c++17 -MMD -Wall -Wextra -g
 
 # Specify include folder
-INC = -Iinclude
+INC = -Iinclude # -I../../include -I../curlpp/include -L../curlpp/build
 
 # Specify libs to use
 LIB = -lcurlpp -lcurl
