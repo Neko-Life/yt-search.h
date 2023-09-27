@@ -29,6 +29,9 @@ void loop_json(nlohmann::json &d, std::function<void(nlohmann::json::iterator)> 
 }
 
 long status_code(const std::string &url) {
+    return 200L;
+    // !TODO: remove this entirely, doing request inside a loop is terrible idea
+    // in the first place! who even suggested this??
     std::ostringstream stream;
 
     curlpp::Easy req;
@@ -109,8 +112,8 @@ int YTrack::load_hq_thumb(nlohmann::json &d) {
     url_hq_res += id + "/hqdefault.jpg";
 
     int result_get = get_thumb(d, url_max_res, debug);
-    if (result_get != 0)
-        result_get = get_thumb(d, url_hq_res, debug);
+    /*if (result_get != 0)
+        result_get = */get_thumb(d, url_hq_res, debug);
 
     return result_get;
 }

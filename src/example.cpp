@@ -29,7 +29,7 @@ int main(int argc, const char *argv[]) {
     std::vector<YTrack> res = data.trackResults();
     // YPlaylist data = get_playlist(q);
     // std::vector<YTrack> res = data.entries();
-    for (auto l : res) {
+    for (auto &l : res) {
         printf("TITLE: %s, %s\n", l.title().c_str(), l.url().c_str());
         printf("DESC: %s\n", l.snippetText().c_str());
         printf("LENGTH: %s\n", l.length().c_str());
@@ -39,8 +39,6 @@ int main(int argc, const char *argv[]) {
             printf("THUMBS: %d, %d, %s\n", t.height, t.width, t.url.c_str());
         }
         auto b = l.bestThumbnail();
-        l.bestThumbnail();
-        l.bestThumbnail();
         printf("BEST_T: %d, %d, %s\n", b.height, b.width, b.url.c_str());
         printf("T_PARAM: %s\n", l.trackingParams().c_str());
     }
