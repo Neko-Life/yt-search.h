@@ -9,7 +9,9 @@
 namespace yt_search {
 struct YPlaylist {
     nlohmann::json raw;
-    std::vector<YTrack> entries() const;
+    int status;
+
+    std::vector<YTrack> entries(bool force_use_side_track = false);
 };
 
 YPlaylist get_playlist(std::string url);

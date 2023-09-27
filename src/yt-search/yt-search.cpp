@@ -113,7 +113,8 @@ int YTrack::load_hq_thumb(nlohmann::json &d) {
 
     int result_get = get_thumb(d, url_max_res, debug);
     /*if (result_get != 0)
-        result_get = */get_thumb(d, url_hq_res, debug);
+        result_get = */
+    get_thumb(d, url_hq_res, debug);
 
     return result_get;
 }
@@ -187,7 +188,9 @@ std::vector<YTrack> YSearchResult::trackResults() const {
     for (size_t i = 0; i < d.size(); i++) {
         json data = d;
 
-        if (!transverse(data, {std::to_string(i).c_str(), "videoRenderer"}))
+        char idx[] = {static_cast<char>(i + '0'), '\0'};
+
+        if (!transverse(data, {idx, "videoRenderer"}))
             continue;
 
         res.push_back({data});
@@ -196,12 +199,11 @@ std::vector<YTrack> YSearchResult::trackResults() const {
     return res;
 }
 
-/* !TODO: to be implemented
 std::vector<YTrack> YSearchResult::sideTrackPlaylist() const {
     std::vector<YTrack> res;
     json d = raw;
 
-    transverse(d, {"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents", "0", "itemSectionRenderer", "contents"});
+    transverse(d, {"contents", "twoColumnWatchNextResults", "secondaryResults", "secondaryResults", "results"});
 
     if (!d.size() || (d.is_array() && d.at(0).is_null()))
         return res;
@@ -209,14 +211,16 @@ std::vector<YTrack> YSearchResult::sideTrackPlaylist() const {
     for (size_t i = 0; i < d.size(); i++) {
         json data = d;
 
-        if (!transverse(data, {std::to_string(i).c_str(), "videoRenderer"}))
+        char idx[] = {static_cast<char>(i + '0'), '\0'};
+
+        if (!transverse(data, {idx, "compactVideoRenderer"}))
             continue;
 
         res.push_back({data});
     }
 
     return res;
-}*/
+}
 
 YSearchResult search(std::string search) {
     YSearchResult ret;

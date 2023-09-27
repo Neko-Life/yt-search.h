@@ -48,8 +48,7 @@ struct YSearchResult {
     // This is interesting
     std::string estimatedResults() const;
     std::vector<YTrack> trackResults() const;
-    // !TODO: to be implemented
-    // std::vector<YTrack> sideTrackPlaylist() const;
+    std::vector<YTrack> sideTrackPlaylist() const;
 };
 
 /**

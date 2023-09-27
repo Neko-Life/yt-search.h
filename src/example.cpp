@@ -12,11 +12,14 @@
 #include <string>
 #include <vector>
 
+// 'https://www.youtube.com/watch?v=Q-2T0K3u_3E&list=RDQ-2T0K3u_3E'
+#define FORCE_UST_TEST
+/* #define GP_TEST */
+
 using namespace yt_search;
 
 int main(int argc, const char *argv[]) {
-    if (argc < 2)
-    {
+    if (argc < 2) {
         fprintf(stderr, "Provide a search query\n");
         return 1;
     }
@@ -25,8 +28,14 @@ int main(int argc, const char *argv[]) {
     for (int a = 1; a < argc; a++) {
         q += q.length() ? (" " + std::string(argv[a])) : std::string(argv[a]);
     }
+#ifdef FORCE_UST_TEST
+    std::vector<YTrack> res = get_playlist(q).entries(true);
+#elif defined(GP_TEST)
+    std::vector<YTrack> res = get_playlist(q).entries();
+#else
     const YSearchResult data = search(q);
     std::vector<YTrack> res = data.trackResults();
+#endif
     // YPlaylist data = get_playlist(q);
     // std::vector<YTrack> res = data.entries();
     for (auto &l : res) {
