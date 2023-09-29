@@ -10,6 +10,7 @@
 #include <curlpp/cURLpp.hpp>
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace yt_search {
 struct YChannel {

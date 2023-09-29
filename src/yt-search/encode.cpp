@@ -1,5 +1,6 @@
 #include "yt-search/encode.h"
 #include <regex>
+#include <sstream>
 
 std::string decodeURIComponent(std::string encoded) {
 
