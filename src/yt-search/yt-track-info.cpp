@@ -107,7 +107,7 @@ uint64_t audio_info_t::sample_rate() const {
 
 uint8_t audio_info_t::channel() const { return raw.is_null() ? 0 : raw.value<uint64_t>("audioChannels", 0); }
 
-double audio_info_t::loudness() const { return raw.is_null() ? 0.0D : raw.value<double>("loudnessDb", 0.0D); }
+double audio_info_t::loudness() const { return raw.is_null() ? 0.0 : raw.value<double>("loudnessDb", 0.0); }
 
 audio_info_t YTInfo::audio_info(int format) const {
     audio_info_t ret;
